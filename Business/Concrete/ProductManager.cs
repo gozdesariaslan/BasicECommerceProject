@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Business.ValidationRules.FluentValidation;
+using Core.Aspects.Autofac.Validation;
 using FluentValidation;
 using Core.CrossCuttingConcerns.Validation;
 
@@ -21,9 +22,10 @@ namespace Business.Concrete
             _productDal = productDal;
         }
 
+        [ValidationAspect(typeof(ProductValidator))]
         public IResult Add(Product product)
         {
-            ValidationTool.Validate(new ProductValidator(),product);
+            
 
             _productDal.Add(product);
             return new SuccessResult(Messages.ProductAdded);
