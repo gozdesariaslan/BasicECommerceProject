@@ -124,7 +124,7 @@ namespace Business.Concrete
         public IResult AddTransactionalTest(Product product)
         {
             Add(product);
-            if (product.UnitPrice<10)
+            if (product.UnitPrice<20)
             {
                 throw new Exception("");
             }
