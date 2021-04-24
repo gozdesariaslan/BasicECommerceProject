@@ -22,6 +22,8 @@ using Core.Utilities.Security.Jwt;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http;
 using Core.Extensions;
+using Microsoft.OpenApi.Models;
+using WebAPI.Options;
 
 namespace WebAPI
 {
@@ -64,6 +66,11 @@ namespace WebAPI
             {
                 new CoreModule()
             });
+
+            services.AddSwaggerGen(x =>
+            {
+                x.SwaggerDoc("v1",new OpenApiInfo{ Title = "ECommerce API" , Description = "v1"});
+            });
         }
 
         
@@ -74,6 +81,19 @@ namespace WebAPI
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            var swaggerOptions = new SwaggerOptions();
+            Configuration.GetSection(nameof(SwaggerOptions)).Bind(swaggerOptions);
+
+            app.UseSwagger(option =>
+            {
+                option.RouteTemplate = swaggerOptions.JsonRoute;
+            });
+
+            app.UseSwaggerUI(option =>
+            {
+                option.SwaggerEndpoint(swaggerOptions.UIEndpoint, swaggerOptions.Description);
+            });
 
             app.UseCors(builder => builder.AllowAnyOrigin().AllowAnyHeader());
 
